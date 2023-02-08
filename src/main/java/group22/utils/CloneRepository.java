@@ -6,11 +6,17 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import java.io.File;
 
 public class CloneRepository {
-    public static void cloneRepository(String repositoryURL, String localPath) {
+    /**
+     * Clones a Git repository.
+     * @param repositoryURL the url to the repository.
+     * @param localPath the specified path to the local repository being cloned.
+     */
+    public static void cloneRepository(String repositoryURL, String localPath, String branch) {
         
         try {
             Git.cloneRepository()
                 .setURI(repositoryURL)
+                .setBranch(branch)
                 .setDirectory(new File(localPath))
                 .call();
             System.out.println("Repository cloned successfully to " + localPath);

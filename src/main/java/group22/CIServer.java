@@ -14,11 +14,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import group22.utils.CloneRepository;
+import group22.utils.CompileProject;
 import group22.utils.Helpers;
-import group22.utils.SetCommitStatus;
 
-
-
+//Comment to change something
 /** 
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -30,36 +29,35 @@ public class CIServer extends AbstractHandler
                        HttpServletRequest request,
                        HttpServletResponse response) 
         throws IOException, ServletException
-    {   
+    {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
 
-        System.out.println(target);
-
+        String method = request.getMethod();
+        String cloneUrl = null;
+        String branch = null;
+        String localPath = "./repo";
         JSONObject jsonObject = new JSONObject();
         // here you do all the continuous integration tasks
         // for example
         // 1st clone your repository
-        try{
-            jsonObject = Helpers.convertBody(request);
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-
-        String cloneUrl = Helpers.getCloneUrl(jsonObject);
-        CloneRepository.cloneRepository(cloneUrl, "./repo");
-        //2nd compile the code
-                     
-
-        //3rd set commit status
-        String statusUrl=Helpers.getStatusUrl(jsonObject);
-        SetCommitStatus.setCommitStatus(statusUrl,"success");
+        if ("POST".equals(method))
+            try{
+                jsonObject = Helpers.convertBody(request);
+                cloneUrl = Helpers.getCloneUrl(jsonObject);
+                branch = Helpers.getBranch(jsonObject);
+                CloneRepository.cloneRepository(cloneUrl, localPath, branch);
+                CompileProject.compileProject(localPath);
+            } catch (Exception e){
+                System.out.println(e.getMessage());
+            }
         
-
-
+        // 1st clone your repository
+        // 2nd compile the code
+        // 3d  run all the tests
+        
         response.getWriter().println("CI job done");
-
     }
  
     // used to start the CI server in command line
