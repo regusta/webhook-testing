@@ -15,9 +15,10 @@ import org.json.simple.JSONValue;
 
 import group22.utils.CloneRepository;
 import group22.utils.Helpers;
+import group22.utils.SetCommitStatus;
 
-//This is a comment in order to change the code
-//Another comment to change it up
+
+
 /** 
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
@@ -29,7 +30,7 @@ public class CIServer extends AbstractHandler
                        HttpServletRequest request,
                        HttpServletResponse response) 
         throws IOException, ServletException
-    {
+    {   
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         baseRequest.setHandled(true);
@@ -48,9 +49,17 @@ public class CIServer extends AbstractHandler
 
         String cloneUrl = Helpers.getCloneUrl(jsonObject);
         CloneRepository.cloneRepository(cloneUrl, "./repo");
-        // 2nd compile the code
+        //2nd compile the code
+                     
+
+        //3rd set commit status
+        String statusUrl=Helpers.getStatusUrl(jsonObject);
+        SetCommitStatus.setCommitStatus(statusUrl,"success");
+        
+
 
         response.getWriter().println("CI job done");
+
     }
  
     // used to start the CI server in command line
