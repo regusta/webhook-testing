@@ -17,6 +17,7 @@ import group22.utils.CloneRepository;
 import group22.utils.Helpers;
 
 //This is a comment in order to change the code
+//Another comment to change it up
 /** 
  Skeleton of a ContinuousIntegrationServer which acts as webhook
  See the Jetty documentation for API documentation of those classes.
