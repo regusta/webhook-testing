@@ -39,5 +39,15 @@ public class Helpers {
     public static String getBranch(JSONObject payload){
         return payload.get("refs").toString();
     }
+
+    public static String getStatusUrl(JSONObject payload) {
+        String tempStatusURL=((JSONObject) payload.get("repository")).get("statuses_url").toString();
+        String sha=payload.get("after").toString();
+        String temp="{sha}";
+        String statusURL=tempStatusURL.replace(temp,sha);
+        System.out.println("status url: " + statusURL);
+        return statusURL;
+    }
+}
     
 }
